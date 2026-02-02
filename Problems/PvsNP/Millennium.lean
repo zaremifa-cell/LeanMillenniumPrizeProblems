@@ -71,6 +71,10 @@ open Computability
   We treat this abstractly as a predicate on some input type `α`, together with a choice
   of finite encoding `ea : FinEncoding α` that plays the role of the input alphabet.
 
+  **Important:** The polynomial-time bound is measured with respect to the *length of the
+  encoded representation* `(ea.encode a).length`, not the abstract object size. This is the
+  standard computer science convention where complexity is measured in bits.
+
   In computational complexity theory, decision problems are typically
   formulated as languages - sets of strings that satisfy a certain property.
 
@@ -88,11 +92,18 @@ def Language (α : Type) := α → Prop
   A language is in P if there exists a polynomial-time algorithm
   that can determine whether a given input belongs to the language.
 
+  **Encoding & Complexity:** The time bound applies to computation on the *encoded string*
+  `(ea.encode a)`, which is standard in complexity theory. Different encodings can differ
+  by polynomial factors but are considered equivalent for the P vs NP question.
+
   Examples in P:
   - Checking if a number is prime (AKS algorithm)
   - Finding shortest paths in a graph (Dijkstra's algorithm)
   - Linear programming
   - 2-SAT (2-variable per clause satisfiability)
+
+  **Definition:** The decision function `f : α → Bool` must be computable by `TM2` in time
+  polynomial in `(ea.encode a).length` (the encoded input size).
 -/
 def InP {α : Type} (ea : FinEncoding α) (L : Language α) : Prop :=
   ∃ (f : α → Bool) (comp : TM2ComputableInPolyTime ea finEncodingBoolBool f),

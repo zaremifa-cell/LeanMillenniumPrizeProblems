@@ -26,6 +26,23 @@ that differs from my original formulation in several key ways:
 
 4. **Direct Use of Structures**: Instead of defining a separate EllipticCurve type, this works
    directly with WeierstrassCurve and its associated structures from mathlib.
+
+## Note: Partial Formulation
+
+This file provides the **rank part** of the BSD conjecture. The full Clay Millennium Prize statement
+also requires the **refined leading coefficient formula**:
+
+  c* = |Sha| · R · Ω · ∏cₚ / |E(ℚ)_tors|²
+
+where:
+- |Sha| is the order of the Tate-Shafarevich group
+- R is the regulator (determinant of the height pairing)
+- Ω is the real period of E
+- cₚ are the Tamagawa numbers
+- |E(ℚ)_tors| is the order of the torsion subgroup
+
+These components are not yet fully formalized in Mathlib and require additional infrastructure
+for the Tate-Shafarevich group, Néron-Tate heights, and Tamagawa factor definitions.
 -/
 
 universe u
@@ -104,7 +121,11 @@ noncomputable def fakeHasseWeil (s : ℂ) : ℂ :=
 It is stated as that for any Weierstrass curve over `ℤ` with non-zero discriminant, the
 Mordell-Weil group of the corresponding elliptic curve over `ℚ` is finitely generated,
 and its *fake* L-function has an analytic continuation to the whole complex plane,
-whose order of zeroes at `1` is equal to the Mordell-Weil rank. -/
+whose order of zeroes at `1` is equal to the Mordell-Weil rank.
+
+**Note:** This is a **partial formulation** (rank part only). The full Clay statement also includes
+the refined leading coefficient formula relating the first derivative of the completed L-function
+at `s = 1` to the arithmetic invariants listed in the module documentation. -/
 def BSD : Prop :=
   ∀ W : WeierstrassCurve ℤ, W.Δ ≠ 0 → WeierstrassCurve.MordellWeil (W.baseChange ℚ) ∧
     ∃ (L : ℂ → ℂ) (σ : ℝ) (_han : ∀ s : ℂ, AnalyticAt ℂ L s),

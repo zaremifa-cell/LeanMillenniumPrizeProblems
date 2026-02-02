@@ -35,7 +35,14 @@ def NontrivialTheory {G : Type} [CompactSimpleGaugeGroup G] (qft : QuantumYangMi
 
 /--
 Mass gap (Lean-level stand-in for “no spectrum in (0,Δ)”).
+**IMPORTANT:** This definition uses a **quadratic form inequality** which is **NOT equivalent** to
+the true spectral gap. It states that for all states orthogonal to the vacuum:
 
+  `⟨ψ, Hψ⟩ ≥ Δ ⟨ψ, ψ⟩`
+
+This is a *necessary but not sufficient* condition for spectral gap. The quadratic form is correct
+physics but does not capture the full Clay definition. See `HasMassGapSpectrum` for Clay's
+official definition: the spectrum has no support in (0, Δ).
 This is phrased in terms of the Hamiltonian from the Wightman axioms:
 `H := qft.wightman.hamiltonian` and vacuum `Ω := qft.wightman.vacuum`.
 -/
@@ -47,9 +54,21 @@ def HasMassGap (G : Type) [CompactSimpleGaugeGroup G]
         Δ * inner ℝ ψ ψ ≤ inner ℝ (qft.wightman.hamiltonian ψ) ψ
 
 /--
-Mass gap in the form used in the Clay statement: the Hamiltonian has no spectrum in `(0, Δ)`.
+**Clay's Definition of Mass Gap:** The Hamiltonian has no spectrum in the interval `(0, Δ)`.
 
-Here `spectrum ℝ qft.wightman.hamiltonian` is Mathlib's spectrum of a bounded operator.
+This is the **OFFICIAL Clay Mathematics Institute** formulation from the Yang-Mills Millennium
+Prize problem. The spectrum `spectrum ℝ qft.wightman.hamiltonian` is Mathlib's notion for
+bounded self-adjoint operators, equal to the set of eigenvalues plus accumulation points.
+
+**Relationship to `HasMassGap` (quadratic form):**
+- Spectral gap (this definition): σ(H) ∩ (0,Δ) = ∅
+- Quadratic form (`HasMassGap`): ⟨ψ, Hψ⟩ ≥ Δ ⟨ψ, ψ⟩ for ψ ⊥ vacuum
+
+Connection: If there is a spectral gap, the quadratic form inequality follows. However, the
+quadratic form inequality does NOT imply a spectral gap without additional assumptions.
+
+**To prove the Clay Millennium Prize conjecture, one must establish `HasMassGapSpectrum`
+(not just the quadratic form `HasMassGap`).**
 -/
 def HasMassGapSpectrum (G : Type) [CompactSimpleGaugeGroup G]
     (qft : QuantumYangMillsTheory G) (Δ : ℝ) : Prop :=
